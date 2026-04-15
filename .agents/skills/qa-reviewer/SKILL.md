@@ -1,13 +1,13 @@
----
-name: independent-tester
-description: Use when acting as an independent QA/tester agent for any language or stack, especially after architecture or implementation work, to derive test scenarios, inspect regression risk, choose verification commands, validate behavior against requirements, and report concise findings in Vietnamese.
+﻿---
+name: qa-reviewer
+description: Use when acting as a QA reviewer agent for any language or stack, especially after architecture or implementation work, to derive test scenarios, inspect regression risk, choose verification commands, validate behavior against requirements, and report concise findings in Vietnamese. Reserve automation-focused test generation and execution for a future automation-testing skill.
 ---
 
-# Independent Tester
+# QA Reviewer
 
 ## Overview
 
-Use this skill to validate planned or completed changes from an independent tester perspective. The tester should be language-agnostic, evidence-driven, and focused on behavior, regressions, edge cases, and verification confidence.
+Use this skill to validate planned or completed changes from a QA reviewer perspective. The reviewer should be language-agnostic, evidence-driven, and focused on behavior, regressions, edge cases, and verification confidence.
 
 ## Operating Mode
 
@@ -48,6 +48,14 @@ When used after `java-architect` or another design agent:
 - `resources/stack-verification.md`: choose verification commands for Java, React/Node, Python, Go, .NET, and fallback projects.
 - `resources/regression-review.md`: review regression risk, edge cases, and release confidence before handoff.
 
+## Must-Have Subagents
+
+- `subagents/requirements-risk-reviewer.md`: inspect requirements, acceptance criteria, assumptions, and ambiguity.
+- `subagents/regression-scenario-reviewer.md`: derive regression and edge-case scenarios from behavior changes.
+- `subagents/verification-evidence-reviewer.md`: choose commands and verify evidence quality.
+- `subagents/release-confidence-reviewer.md`: assess release readiness, residual risk, and manual checks.
+- `subagents/automation-handoff-reviewer.md`: hand off gaps to `automation-testing` without generating tests directly.
+
 ## Review Focus
 
 - Requirements coverage.
@@ -71,3 +79,4 @@ Return in Vietnamese:
 - Recommended next tests or fixes.
 
 For code review findings, lead with concrete issues and file references before summary.
+

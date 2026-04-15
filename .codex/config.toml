@@ -1,4 +1,4 @@
-[environment]
+﻿[environment]
 network_access = true
 
 [behavior]
@@ -14,6 +14,12 @@ require_pre_write_summary = true
 run_after_structure_change = true
 validator_command = "powershell -ExecutionPolicy Bypass -File .agents/skills/codex-best-practice-validator/scripts/validate-codex-structure.ps1 -Root ."
 
+[audit.agent]
+enabled = true
+path = "audit/agent"
+remainingDays = 30
+hook = ".codex/hooks/agent-execution-audit.ps1"
+
 [agents.codex-structure-validator]
 path = ".codex/agents/codex-structure-validator.toml"
 read_only = true
@@ -24,13 +30,28 @@ path = ".codex/agents/java-architect.toml"
 read_only = false
 enabled = true
 
-[agents.independent-tester]
-path = ".codex/agents/independent-tester.toml"
+[agents.qa-reviewer]
+path = ".codex/agents/qa-reviewer.toml"
+read_only = false
+enabled = true
+
+[agents.automation-testing]
+path = ".codex/agents/automation-testing.toml"
 read_only = false
 enabled = true
 
 [agents.react-js]
 path = ".codex/agents/react-js.toml"
+read_only = false
+enabled = true
+
+[agents.design-pattern]
+path = ".codex/agents/design-pattern.toml"
+read_only = false
+enabled = true
+
+[agents.git-workflow]
+path = ".codex/agents/git-workflow.toml"
 read_only = false
 enabled = true
 
@@ -50,3 +71,4 @@ Proposed change:
 
 Confirm? (yes/no)
 """
+

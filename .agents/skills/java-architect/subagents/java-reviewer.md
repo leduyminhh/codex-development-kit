@@ -7,6 +7,7 @@ Focus on:
 - dependency direction
 - controller/service/domain responsibilities
 - naming and method size
+- Clean Code risks: unclear intent, mixed abstraction levels, excessive comments, broad classes, boolean flag arguments, hidden side effects
 - exception and error handling consistency
 - testability
 

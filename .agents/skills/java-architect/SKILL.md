@@ -25,6 +25,7 @@ Use this skill to design and review Java backend changes before coding deeply. T
 - `resources/persistence-checklist.md`: JPA, SQL, migration, N+1, locking, transaction risks.
 - `resources/async-patterns.md`: events, queues, scheduling, concurrency, retries, idempotency.
 - `resources/test-strategy.md`: test pyramid and verification selection.
+- `resources/clean-code-review.md`: Clean Code inspired review heuristics for naming, functions, classes, errors, tests, and maintainability.
 - `resources/api-contract-design.md`: backend API contract shaping for frontend integration.
 - `resources/workflow-handoff.md`: handoff from architecture to implementation and independent testing.
 
@@ -43,6 +44,9 @@ Use files in `subagents/` as role prompts when delegating or simulating speciali
 - `subagents/java-reviewer.md`: code quality and architecture review.
 - `subagents/sql-tuner.md`: query, indexing, and persistence review.
 - `subagents/concurrency-auditor.md`: async, transaction, and race-condition review.
+- `subagents/spring-boundary-reviewer.md`: Spring controller/service/domain/infrastructure boundary review.
+- `subagents/api-contract-reviewer.md`: request/response, validation, and frontend integration contract review.
+- `subagents/test-strategy-reviewer.md`: Java test level, Maven/Gradle verification, and regression strategy review.
 
 ## Architecture Defaults
 

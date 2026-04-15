@@ -1,6 +1,6 @@
-# Workflow Handoff
+﻿# Workflow Handoff
 
-Use this resource when architecture output should feed another agent such as `react-js` or `independent-tester`.
+Use this resource when architecture output should feed another agent such as `react-js` or `qa-reviewer`.
 
 ## Handoff To React JS
 
@@ -20,7 +20,7 @@ Avoid:
 - hiding unresolved API ambiguity
 - mixing backend implementation notes into UI copy
 
-## Handoff To Independent Tester
+## Handoff To QA Reviewer
 
 Provide:
 
@@ -44,3 +44,4 @@ Risks:
 Suggested verification:
 Open questions:
 ```
+

@@ -21,6 +21,14 @@ Validate the repository's Codex concepts and structure. Do not implement domain 
 - Orchestration: prefer Codex Agent -> Skill; do not design around `.codex/commands/` as stable.
 - Domain separation: Java, React, DevOps, and other domain skills stay outside the validator core; the validator may check skill shape but must not embed domain procedures.
 
+## Must-Have Subagents
+
+- `subagents/skill-structure-reviewer.md`: inspect skill frontmatter, progressive disclosure, resources, and UI metadata.
+- `subagents/agent-config-reviewer.md`: inspect `.codex/agents/*.toml` and agent-to-skill boundaries.
+- `subagents/config-safety-reviewer.md`: inspect `.codex/config.toml`, sandbox, approval, audit, and agent registration.
+- `subagents/hook-audit-reviewer.md`: inspect hooks, audit behavior, retention, and generated artifacts.
+- `subagents/protected-path-reviewer.md`: enforce `docs/` and `reports/` confirmation policy.
+
 ## Report Format
 
 Return Markdown with `Summary`, `Pass`, `Warning`, `Fail`, and `Next Actions` sections.

@@ -87,11 +87,15 @@ Strict prohibitions:
 
 ## Git Commit Convention
 
-Format:
-```text
-<type> (<scope>): <short title>
-<vietnamese description>
-```
+Use the `git-workflow` skill for branch, commit, merge, revert, release, hotfix, staging, push, and PR preparation workflows.
+
+If the user does not provide a commit message, automatically generate:
+- a conventional commit title
+- a Vietnamese commit description
+
+Worktree rule:
+- Do not create or use a git worktree unless the user explicitly requests it.
+- By default, work directly in the current repository checkout and current branch.
 
 ## Do Not
 

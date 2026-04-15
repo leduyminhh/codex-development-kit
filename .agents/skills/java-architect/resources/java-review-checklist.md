@@ -13,9 +13,11 @@
 - Prefer intention-revealing names over comments.
 - Avoid boolean flags that change method behavior.
 - Keep methods small enough to show one level of abstraction.
+- Keep each method at one abstraction level; split mixed orchestration, calculation, mapping, and I/O.
 - Replace primitive obsession with value objects when rules attach to a value.
 - Avoid broad `util`, `helper`, or `common` packages for business behavior.
 - Do not hide side effects in mappers, validators, getters, or logging helpers.
+- Prefer explicit domain concepts over clever, compressed, or overloaded code.
 
 ## Dependency Direction
 
@@ -31,3 +33,5 @@
 - What happens under concurrent requests?
 - What must be atomic?
 - Which tests prove the business rule without booting the whole app?
+- Would a maintainer understand the intent by reading names and structure before reading comments?
+- Is any class or method changing for more than one reason?
