@@ -56,13 +56,17 @@ function Get-CodexTomlBoolValue {
 function Get-CodexTomlArrayValue {
     param([string]$TomlText, [string]$Section, [string]$Key, [string[]]$Default = @())
 
-    $raw = Get-CodexTomlRawValue -TomlText $TomlText -Section $Section -Key $Key
-    if ([string]::IsNullOrWhiteSpace($raw) -or $raw -notmatch '^\[(.*)\]$') {
+    $sectionText = Get-CodexTomlSection -TomlText $TomlText -Section $Section
+    if ([string]::IsNullOrWhiteSpace($sectionText)) {
         return $Default
     }
 
+    $pattern = "(?ms)^\s*$([regex]::Escape($Key))\s*=\s*\[(.*?)\]"
+    $match = [regex]::Match($sectionText, $pattern)
+    if (-not $match.Success) { return $Default }
+
     $values = New-Object System.Collections.Generic.List[string]
-    foreach ($item in [regex]::Matches($matches[1], '"([^"]+)"')) {
+    foreach ($item in [regex]::Matches($match.Groups[1].Value, '"([^"]+)"')) {
         $values.Add($item.Groups[1].Value)
     }
 
@@ -81,6 +85,17 @@ function Get-CodexTomlStringMap {
     }
 
     return $map
+}
+
+function Get-CodexTomlSections {
+    param([string]$TomlText)
+
+    $sections = New-Object System.Collections.Generic.List[string]
+    foreach ($match in [regex]::Matches($TomlText, '(?m)^\[([^\]]+)\]\s*$')) {
+        $sections.Add($match.Groups[1].Value)
+    }
+
+    return $sections.ToArray()
 }
 
 function Get-CodexHoChiMinhTimeZone {

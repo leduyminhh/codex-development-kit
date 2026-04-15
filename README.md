@@ -96,6 +96,29 @@ Current domain capabilities:
 
 Every domain skill or agent must pass `codex-best-practice-validator` before it is considered complete.
 
+## Selected Test Routing
+
+Tests are mapped in `.codex/test-map.toml` so agents run only the checks related to changed files, activated skills, or selected agents.
+
+Run the selected plan for current git changes:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/test-selected.ps1 -FromGit
+```
+
+Run tests for one activated skill:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/test-selected.ps1 -ActivatedSkill onion-architecture
+```
+
+Rules:
+
+- `test.always` is for final safety gates.
+- `test.core` is for shared scripts, config, hooks, and validators.
+- `test.skill` is for skill/agent-specific tests.
+- Every new `*test*.ps1` file must be registered in `.codex/test-map.toml` when it is created.
+
 ## Reference Material
 
 `references/external/codex-cli-best-practice/` is an optional local clone path for `shanraisshan/codex-cli-best-practice` analysis. Do not treat it as source code owned by this repo unless it is explicitly converted into a submodule or vendored reference later.

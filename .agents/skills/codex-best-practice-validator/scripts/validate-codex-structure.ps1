@@ -185,6 +185,7 @@ function Ensure-ScaffoldDirectory {
 $findings = New-Object System.Collections.Generic.List[object]
 $resolvedRoot = (Resolve-Path -LiteralPath $Root).Path
 $configPath = Join-Path $resolvedRoot '.codex/config.toml'
+$testMapPath = Join-Path $resolvedRoot '.codex/test-map.toml'
 $configText = if (Test-Path -LiteralPath $configPath) { Get-Content -LiteralPath $configPath -Raw } else { '' }
 $protectedScanPaths = Get-CodexTomlArrayValue -TomlText $configText -Section 'scan.policy' -Key 'protectedScanPaths' -Default @('docs/', 'reports/')
 $skipProtectedPathsByDefault = Get-CodexTomlBoolValue -TomlText $configText -Section 'scan.policy' -Key 'skipProtectedPathsByDefault' -Default $true
@@ -293,6 +294,31 @@ Ensure-ScaffoldDirectory -Path $codexHooksRoot -Label 'Step 3 codex-hook root' -
 
 $codexMcpRoot = Join-Path $resolvedRoot '.codex/mcp'
 Ensure-ScaffoldDirectory -Path $codexMcpRoot -Label 'Step 4 codex-mcp root' -TrackWhenEmpty $true
+
+if (Test-Path -LiteralPath $testMapPath) {
+    $testMapText = Get-Content -LiteralPath $testMapPath -Raw
+    $findings.Add((New-Finding 'pass' '.codex/test-map.toml exists for selected test mapping.'))
+
+    $testFiles = @(Get-ChildItem -LiteralPath $resolvedRoot -Recurse -File -Filter '*test*.ps1' -ErrorAction SilentlyContinue |
+        Where-Object { $_.FullName -notmatch '\\.git\\' } |
+        ForEach-Object {
+            ($_.FullName.Substring($resolvedRoot.Length).TrimStart('\') -replace '\\', '/')
+        })
+
+    foreach ($testFile in $testFiles) {
+        if ($testFile -eq 'scripts/test-install-skill-link.ps1') {
+            continue
+        }
+
+        if ($testMapText.Contains($testFile)) {
+            $findings.Add((New-Finding 'pass' "Test file is mapped: $testFile"))
+        } else {
+            $findings.Add((New-Finding 'fail' "Test file must be mapped in .codex/test-map.toml: $testFile"))
+        }
+    }
+} else {
+    $findings.Add((New-Finding 'warning' '.codex/test-map.toml is missing. Add it before introducing selected test routing.'))
+}
 
 if (Test-Path -LiteralPath $configPath) {
     $config = Get-Content -LiteralPath $configPath -Raw

@@ -80,6 +80,9 @@ Strict prohibitions:
 ## Workflow Rules
 - After any structure change, run the validator:
   `powershell -ExecutionPolicy Bypass -File .agents/skills/codex-best-practice-validator/scripts/validate-codex-structure.ps1 -Root . -Fix`
+- Use selected tests instead of running every test by default:
+  `powershell -ExecutionPolicy Bypass -File scripts/test-selected.ps1 -FromGit`
+- When adding any `*test*.ps1` file, map it in `.codex/test-map.toml` under exactly one group: `test.always`, `test.core`, or `test.skill`.
 - Keep `AGENTS.md` concise, ideally under 150 lines.
 - Use `.codex/config.toml` for deterministic settings such as model, sandbox, approval policy, profile, and agent registration.
 
