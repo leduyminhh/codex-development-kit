@@ -1,6 +1,6 @@
 param(
     [string]$SourceRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path,
-    [string]$LinkName = 'codex-workflow-kit',
+    [string]$LinkName = 'codex-development-kit',
     [string]$SkillsRoot = (Join-Path $env:USERPROFILE '.agents/skills'),
     [switch]$Force,
     [switch]$WhatIf
