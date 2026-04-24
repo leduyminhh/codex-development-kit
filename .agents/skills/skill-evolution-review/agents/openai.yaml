@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Evolution Review"
+  short_description: "Review audit and feedback patterns, then evolve skills through guarded upgrades"
+  default_prompt: "Use $skill-evolution-review to review audit logs and feedback notes, identify skill drift, classify safe evolution scope, propose focused updates, and auto-apply only small validated patches."

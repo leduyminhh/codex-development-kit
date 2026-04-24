@@ -52,7 +52,7 @@ Manifest khong thay the `config.toml`. No chi lam ro skill nao co agent entry, s
 | `naming-rule-validate` | Kiem tra naming convention cho artifacts. |
 | `react-code-generate` | Tao/sua React UI, API integration, accessibility/performance review. |
 | `security-code-review` | Review security risk theo OWASP/ASVS/CWE, auth, secrets, dependencies, va verification. |
-| `skill-maintenance-review` | Review drift cua skill/agent tu audit va feedback, de xuat nang cap co approval gate. |
+| `skill-evolution-review` | Engine trung tam review drift, phan loai evidence va dieu phoi tien hoa skill/agent. |
 | `test-automation-validate` | Tao va verify automated tests. |
 | `test-qa-review` | QA review doc lap va regression/verification planning. |
 

@@ -33,7 +33,12 @@ feedbackPath = "audit/skill-feedback"
         --root $tempRoot `
         --agent-name 'java-analyze' `
         --skill-names 'java-analyze' `
+        --target-type 'skill' `
+        --target-name 'java-analyze' `
         --outcome 'mixed' `
+        --severity 'medium' `
+        --reproducible `
+        --evidence-key 'missing-async-transaction-checklist' `
         --task-summary 'Review Spring payment flow' `
         --correct-notes 'Boundary review was useful' `
         --wrong-notes 'Missed transaction warning' `
@@ -48,6 +53,11 @@ feedbackPath = "audit/skill-feedback"
     $entry = (Get-Content -LiteralPath $feedbackFiles[0].FullName -Raw | ConvertFrom-Json)
     Assert-Equal 'java-analyze' $entry.agentName 'Feedback entry should keep agent name.'
     Assert-Equal 'mixed' $entry.outcome 'Feedback entry should keep outcome.'
+    Assert-Equal 'skill' $entry.targetType 'Feedback entry should keep target type.'
+    Assert-Equal 'java-analyze' $entry.targetName 'Feedback entry should keep target name.'
+    Assert-Equal 'medium' $entry.severity 'Feedback entry should keep severity.'
+    Assert-Equal $true $entry.reproducible 'Feedback entry should keep reproducible flag.'
+    Assert-Equal 'missing-async-transaction-checklist' $entry.evidenceKey 'Feedback entry should keep evidence key.'
     Assert-Equal 'Review Spring payment flow' $entry.taskSummary 'Feedback entry should keep task summary.'
     Assert-Equal 'java-analyze' $entry.skillNames[0] 'Feedback entry should keep skill names.'
     Assert-Equal 'Boundary review was useful' $entry.correctNotes 'Feedback entry should keep correct notes.'
@@ -59,6 +69,8 @@ feedbackPath = "audit/skill-feedback"
         --root $tempRoot `
         --agent-name 'java-analyze' `
         --skill-names 'java-analyze' `
+        --target-type 'skill' `
+        --target-name 'java-analyze' `
         --outcome 'correct' `
         --task-summary 'Review repository naming rules' `
         --correct-notes 'Detected metadata mismatch' | Out-Null

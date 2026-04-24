@@ -16,7 +16,12 @@ def main() -> int:
     parser.add_argument("--root", default=str(REPO_ROOT))
     parser.add_argument("--agent-name", required=True)
     parser.add_argument("--skill-names", nargs="*", default=[])
+    parser.add_argument("--target-type", choices=["skill", "agent"], default="skill")
+    parser.add_argument("--target-name", default="")
     parser.add_argument("--outcome", choices=["correct", "wrong", "mixed"], default="mixed")
+    parser.add_argument("--severity", choices=["low", "medium", "high"], default="medium")
+    parser.add_argument("--reproducible", action="store_true")
+    parser.add_argument("--evidence-key", default="")
     parser.add_argument("--task-summary", required=True)
     parser.add_argument("--correct-notes", default="")
     parser.add_argument("--wrong-notes", default="")
@@ -34,11 +39,17 @@ def main() -> int:
 
     now = now_ho_chi_minh()
     feedback_file = feedback_root / f"{now.strftime('%Y%m%d')}_skill-feedback.jsonl"
+    target_name = args.target_name.strip() or args.agent_name
     entry = {
         "timestamp": now.isoformat(timespec="seconds"),
         "agentName": args.agent_name,
         "skillNames": [name for name in args.skill_names if name.strip()],
+        "targetType": args.target_type,
+        "targetName": target_name,
         "outcome": args.outcome,
+        "severity": args.severity,
+        "reproducible": bool(args.reproducible),
+        "evidenceKey": args.evidence_key.strip(),
         "taskSummary": args.task_summary,
         "correctNotes": args.correct_notes,
         "wrongNotes": args.wrong_notes,

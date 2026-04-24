@@ -43,7 +43,7 @@ def main() -> int:
     feedback_path = config.get_str("skill_upgrade", "feedbackPath", default="audit/skill-feedback") or "audit/skill-feedback"
     proposal_path = config.get_str("skill_upgrade", "proposalPath", default="audit/skill-upgrade") or "audit/skill-upgrade"
     state_path = config.get_str("skill_upgrade", "statePath", default="audit/skill-upgrade-state") or "audit/skill-upgrade-state"
-    reviewer_agent = config.get_str("skill_upgrade", "reviewerAgent", default="skill-maintenance-review") or "skill-maintenance-review"
+    reviewer_agent = config.get_str("skill_upgrade", "reviewerAgent", default="skill-evolution-review") or "skill-evolution-review"
     validator_command = config.get_str("validation", "validator_command", default="")
 
     if not enabled:
@@ -74,7 +74,8 @@ def main() -> int:
 
     grouped = {}
     for entry in feedback_entries:
-        grouped.setdefault(entry.get("agentName", ""), []).append(entry)
+        target_name = str(entry.get("targetName") or entry.get("agentName") or "").strip()
+        grouped.setdefault(target_name, []).append(entry)
 
     writer_script = Path(__file__).resolve().parent / "write-skill-upgrade-proposal.py"
     created = []
@@ -85,6 +86,7 @@ def main() -> int:
             for skill in entry.get("skillNames", []):
                 if skill and skill not in target_skills:
                     target_skills.append(skill)
+        target_type = str(entries[0].get("targetType") or "skill")
 
         now = now_ho_chi_minh()
         proposal_file = proposal_root / f"{now.strftime('%Y%m%d')}_{target_agent}.json"
@@ -92,10 +94,16 @@ def main() -> int:
         write_state(root, state_path, "observe", "completed", "feedback_group_loaded", target_agent=target_agent, feedback_count=feedback_count, reviewer_agent=reviewer_agent)
         write_state(root, state_path, "diagnose", "completed", "feedback_grouped", target_agent=target_agent, feedback_count=feedback_count, reviewer_agent=reviewer_agent)
 
-        snapshot = {"targetAgent": target_agent, "targetSkills": target_skills, "feedbackEntries": entries}
+        snapshot = {
+            "targetType": target_type,
+            "targetName": target_agent,
+            "targetAgent": str(entries[0].get("agentName") or target_agent),
+            "targetSkills": target_skills,
+            "feedbackEntries": entries,
+        }
         snapshot_file.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-        cmd = [sys.executable, str(writer_script), "--snapshot-file", str(snapshot_file), "--proposal-file", str(proposal_file)]
+        cmd = [sys.executable, str(writer_script), "--root", str(root), "--snapshot-file", str(snapshot_file), "--proposal-file", str(proposal_file)]
         if validator_command.strip():
             cmd.extend(["--validation-commands", validator_command])
         subprocess.run(cmd, check=True, cwd=root)

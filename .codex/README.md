@@ -50,7 +50,7 @@ Agent hien co:
 - `git-workflow-design`
 - `java-analyze`
 - `react-code-generate`
-- `skill-maintenance-review`
+- `skill-evolution-review`
 - `test-automation-validate`
 - `test-qa-review`
 
@@ -68,7 +68,7 @@ Agent hien co:
 | `[documentation.writer]` | Policy ghi documentation. |
 | `[diagram.writer]` | Policy ghi PlantUML diagram output. |
 | `[hooks.project]` | Project event log path, filename pattern, format, retention, service name va event wrappers. |
-| `[skill_upgrade]` | Cau hinh chu ky review/feedback/proposal cho co che tu de xuat nang cap skill. |
+| `[skill_upgrade]` | Cau hinh chu ky observe/diagnose/proposal/apply cho co che skill evolution. |
 | `[guards]` | Safety guards cho destructive/protected actions. |
 | `[agents.<name>]` | Dang ky agent config path, read_only va enabled. |
 

@@ -31,6 +31,28 @@ validator_command = ""
 [skill_upgrade]
 statePath = "audit/skill-upgrade-state"
 '@
+    New-Item -ItemType Directory -Path (Join-Path $tempRoot '.agents/skills') -Force | Out-Null
+    Set-Content -LiteralPath (Join-Path $tempRoot '.agents/skills/manifest.toml') -Encoding utf8 -Value @'
+[repo_structure]
+skills_root = ".agents/skills"
+
+[evolution.defaults]
+enabled = true
+reviewer = "skill-evolution-review"
+mode = "hybrid"
+min_pattern_count = 3
+allow_fast_track = true
+auto_apply = false
+
+[[evolution.profile]]
+skill = "demo-skill"
+mode = "hybrid"
+auto_apply = true
+allowed_paths = [".agents/skills/demo-skill/SKILL.md"]
+max_patch_lines = 20
+max_files_per_patch = 1
+validation_commands = []
+'@
 
     Set-Content -LiteralPath (Join-Path $tempRoot '.agents/skills/demo-skill/SKILL.md') -Encoding utf8 -Value "# Old content"
 
@@ -72,6 +94,56 @@ statePath = "audit/skill-upgrade-state"
         $ErrorActionPreference = $previousErrorActionPreference
     }
     Assert-Equal 1 $LASTEXITCODE 'Apply should fail when update path escapes the repo root.'
+
+    $disallowedProposal = Join-Path $tempRoot 'disallowed-proposal.json'
+    Set-Content -LiteralPath $disallowedProposal -Encoding utf8 -Value @'
+{
+  "approvalStatus": "approved",
+  "targetName": "demo-skill",
+  "updates": [
+    {
+      "path": ".agents/skills/other-skill/SKILL.md",
+      "content": "bad"
+    }
+  ]
+}
+'@
+
+    $previousErrorActionPreference = $ErrorActionPreference
+    try {
+        $ErrorActionPreference = 'Continue'
+        & python $scriptPath --root $tempRoot --proposal-file $disallowedProposal 2>$null | Out-Null
+    } finally {
+        $ErrorActionPreference = $previousErrorActionPreference
+    }
+    Assert-Equal 1 $LASTEXITCODE 'Apply should fail when update path is outside the skill evolution allowed paths.'
+
+    $tooManyFilesProposal = Join-Path $tempRoot 'too-many-files-proposal.json'
+    Set-Content -LiteralPath $tooManyFilesProposal -Encoding utf8 -Value @'
+{
+  "approvalStatus": "approved",
+  "targetName": "demo-skill",
+  "updates": [
+    {
+      "path": ".agents/skills/demo-skill/SKILL.md",
+      "content": "# New content"
+    },
+    {
+      "path": ".agents/skills/demo-skill/extra.md",
+      "content": "extra"
+    }
+  ]
+}
+'@
+
+    $previousErrorActionPreference = $ErrorActionPreference
+    try {
+        $ErrorActionPreference = 'Continue'
+        & python $scriptPath --root $tempRoot --proposal-file $tooManyFilesProposal 2>$null | Out-Null
+    } finally {
+        $ErrorActionPreference = $previousErrorActionPreference
+    }
+    Assert-Equal 1 $LASTEXITCODE 'Apply should fail when proposal exceeds max_files_per_patch.'
 
     $goodProposal = Join-Path $tempRoot 'good-proposal.json'
     Set-Content -LiteralPath $goodProposal -Encoding utf8 -Value @'

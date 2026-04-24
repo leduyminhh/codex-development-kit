@@ -72,7 +72,7 @@ Log format follows a Log4j-like shape with logfmt fields after `|`:
 | `naming-rule-validate` | Kiem tra naming convention va do khop metadata name cho agent, skill, subagent, hook va script. |
 | `java-analyze` | Phan tich Java/Spring backend, flow, persistence, async, clean code, test strategy. |
 | `react-code-generate` | Tao/sua React UI tu Figma, ticket, yeu cau text va API contract. |
-| `skill-maintenance-review` | Review drift cua skill/agent tu audit va feedback, de xuat nang cap co approval gate. |
+| `skill-evolution-review` | Engine trung tam quan sat drift cua skill/agent tu audit va feedback, phan loai va de xuat tien hoa co guardrail. |
 | `test-qa-review` | Review QA doc lap, scenario, regression risk, verification plan. |
 | `test-automation-validate` | Lap ke hoach va tao automated tests theo stack. |
 | `diagram-generate` | Chon va tao PlantUML diagrams. |

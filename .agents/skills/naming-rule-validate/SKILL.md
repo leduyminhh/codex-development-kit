@@ -81,7 +81,7 @@ Additional qualifier tokens:
 `accessibility`, `activity`, `api`, `application`, `architecture`, `archimate`, `automation`, `audit`,
 `behavior`, `boundary`, `branch`, `class`, `commit`, `component`, `composition`,
 `concurrency`, `container`, `coverage`, `creation`, `database`, `deployment`, `domain`,
-`drift`, `e2e`, `edge`, `er`, `feature`, `figma`, `fixture`, `flaky`, `flow`, `form`, `gantt`,
+`drift`, `e2e`, `edge`, `er`, `evolution`, `feature`, `figma`, `fixture`, `flaky`, `flow`, `form`, `gantt`,
 `grammar`, `handoff`, `ie`, `infrastructure`, `json`, `maintenance`, `merge`, `mindmap`, `module`,
 `network`, `object`, `output`, `path`, `performance`, `qa`, `regression`, `release`, `risk`, `rule`, `safety`, `salt`, `shared`,
 `sequence`, `spring`, `state`, `strategy`, `structure`, `timing`, `transaction`, `unit`,
@@ -131,7 +131,7 @@ Current approved agents:
 - `java-analyze`
 - `react-code-generate`
 - `security-code-review`
-- `skill-maintenance-review`
+- `skill-evolution-review`
 - `test-automation-validate`
 - `test-qa-review`
 
@@ -143,9 +143,9 @@ Current skill-only capabilities:
 
 Scripts and hooks may use command-style verbs when they are operational wrappers, for example:
 
-- `.agents/skills/skill-maintenance-review/scripts/add-skill-feedback.ps1`
-- `.agents/skills/skill-maintenance-review/scripts/add-skill-feedback.py`
-- `.agents/skills/skill-maintenance-review/scripts/apply-skill-upgrade-proposal.py`
+- `.agents/skills/skill-evolution-review/scripts/add-skill-feedback.ps1`
+- `.agents/skills/skill-evolution-review/scripts/add-skill-feedback.py`
+- `.agents/skills/skill-evolution-review/scripts/apply-skill-upgrade-proposal.py`
 - `.codex/hooks/log-agent-event.ps1`
 - `scripts/hook-service.ps1`
 - `run-coverage-report.ps1`

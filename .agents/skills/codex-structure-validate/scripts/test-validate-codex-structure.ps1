@@ -15,7 +15,7 @@ try {
     New-Item -ItemType Directory -Path $tempRoot -Force | Out-Null
     New-Item -ItemType Directory -Path (Join-Path $tempRoot '.agents/skills/new-agent') -Force | Out-Null
     New-Item -ItemType Directory -Path (Join-Path $tempRoot '.agents/skills/read-only-agent') -Force | Out-Null
-    New-Item -ItemType Directory -Path (Join-Path $tempRoot 'workflows/workflow-skill-maintenance-review') -Force | Out-Null
+    New-Item -ItemType Directory -Path (Join-Path $tempRoot 'workflows/workflow-skill-evolution-review') -Force | Out-Null
     New-Item -ItemType Directory -Path (Join-Path $tempRoot '.codex/agents') -Force | Out-Null
     New-Item -ItemType Directory -Path (Join-Path $tempRoot 'docs/ignored-skill') -Force | Out-Null
 
@@ -54,13 +54,13 @@ description: Read-only agent test skill.
 # Read Only Agent
 '@
 
-    Set-Content -LiteralPath (Join-Path $tempRoot 'workflows/workflow-skill-maintenance-review/WORKFLOW.md') -Encoding utf8 -Value @'
+    Set-Content -LiteralPath (Join-Path $tempRoot 'workflows/workflow-skill-evolution-review/WORKFLOW.md') -Encoding utf8 -Value @'
 ---
-name: workflow-skill-maintenance-review
-description: Test workflow wrapper for skill maintenance review.
+name: workflow-skill-evolution-review
+description: Test workflow wrapper for skill evolution review.
 ---
 
-# Workflow Skill Maintenance Review
+# Workflow Skill Evolution Review
 '@
 
     Set-Content -LiteralPath (Join-Path $tempRoot '.codex/agents/new-agent.toml') -Encoding utf8 -Value @'

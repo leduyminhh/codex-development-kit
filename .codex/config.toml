@@ -71,7 +71,7 @@ reloadOnConfigChange = true
 [skill_upgrade]
 enabled = true
 intervalDays = 14
-reviewerAgent = "skill-maintenance-review"
+reviewerAgent = "skill-evolution-review"
 feedbackPath = "audit/skill-feedback"
 proposalPath = "audit/skill-upgrade"
 statePath = "audit/skill-upgrade-state"
@@ -151,8 +151,8 @@ read_only = false
 enabled = true
 hooks_project_enabled = true
 
-[agents.skill-maintenance-review]
-path = ".codex/agents/skill-maintenance-review.toml"
+[agents.skill-evolution-review]
+path = ".codex/agents/skill-evolution-review.toml"
 read_only = false
 enabled = true
 hooks_project_enabled = true

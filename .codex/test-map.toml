@@ -65,40 +65,44 @@ commands = [
   "powershell -ExecutionPolicy Bypass -File .agents/skills/codex-structure-validate/scripts/test-validate-codex-structure.ps1"
 ]
 
-[test.skill.skill-maintenance-review-feedback]
-agents = ["skill-maintenance-review"]
-skills = ["skill-maintenance-review"]
+[test.skill.skill-evolution-review-feedback]
+agents = ["skill-evolution-review"]
+skills = ["skill-evolution-review"]
 paths = [
-  ".agents/skills/skill-maintenance-review/scripts/add-skill-feedback.ps1",
-  ".agents/skills/skill-maintenance-review/scripts/add-skill-feedback.py",
-  ".agents/skills/skill-maintenance-review/scripts/test-add-skill-feedback.ps1",
+  ".agents/skills/skill-evolution-review/scripts/add-skill-feedback.ps1",
+  ".agents/skills/skill-evolution-review/scripts/add-skill-feedback.py",
+  ".agents/skills/skill-evolution-review/scripts/test-add-skill-feedback.ps1",
   "scripts/lib/codex_config.py",
-  ".agents/skills/skill-maintenance-review/SKILL.md",
-  ".codex/agents/skill-maintenance-review.toml",
+  ".agents/skills/skill-evolution-review/SKILL.md",
+  ".codex/agents/skill-evolution-review.toml",
   ".codex/config.toml"
 ]
 commands = [
-  "powershell -ExecutionPolicy Bypass -File .agents/skills/skill-maintenance-review/scripts/test-add-skill-feedback.ps1"
+  "powershell -ExecutionPolicy Bypass -File .agents/skills/skill-evolution-review/scripts/test-add-skill-feedback.ps1"
 ]
 
-[test.skill.skill-maintenance-review-cycle]
-agents = ["skill-maintenance-review"]
-skills = ["skill-maintenance-review"]
+[test.skill.skill-evolution-review-cycle]
+agents = ["skill-evolution-review"]
+skills = ["skill-evolution-review"]
 paths = [
-  ".agents/skills/skill-maintenance-review/scripts/run-skill-upgrade-cycle.py",
-  ".agents/skills/skill-maintenance-review/scripts/apply-skill-upgrade-proposal.py",
-  ".agents/skills/skill-maintenance-review/scripts/write-skill-upgrade-proposal.ps1",
-  ".agents/skills/skill-maintenance-review/scripts/write-skill-upgrade-proposal.py",
-  ".agents/skills/skill-maintenance-review/scripts/test-run-skill-upgrade-cycle.ps1",
-  ".agents/skills/skill-maintenance-review/scripts/test-apply-skill-upgrade-proposal.ps1",
+  ".agents/skills/skill-evolution-review/scripts/run-skill-upgrade-cycle.py",
+  ".agents/skills/skill-evolution-review/scripts/apply-skill-upgrade-proposal.py",
+  ".agents/skills/skill-evolution-review/scripts/write-skill-upgrade-proposal.ps1",
+  ".agents/skills/skill-evolution-review/scripts/write-skill-upgrade-proposal.py",
+  ".agents/skills/skill-evolution-review/scripts/test-run-skill-upgrade-cycle.ps1",
+  ".agents/skills/skill-evolution-review/scripts/test-apply-skill-upgrade-proposal.ps1",
+  ".agents/skills/skill-evolution-review/scripts/test-generate-execute-evolution.ps1",
+  ".agents/skills/skill-evolution-review/scripts/test-review-analyze-evolution.ps1",
   ".codex/config.toml",
-  ".codex/agents/skill-maintenance-review.toml",
-  ".agents/skills/skill-maintenance-review",
+  ".codex/agents/skill-evolution-review.toml",
+  ".agents/skills/skill-evolution-review",
   ".agents/skills/naming-rule-validate"
 ]
 commands = [
-  "powershell -ExecutionPolicy Bypass -File .agents/skills/skill-maintenance-review/scripts/test-run-skill-upgrade-cycle.ps1",
-  "powershell -ExecutionPolicy Bypass -File .agents/skills/skill-maintenance-review/scripts/test-apply-skill-upgrade-proposal.ps1",
+  "powershell -ExecutionPolicy Bypass -File .agents/skills/skill-evolution-review/scripts/test-run-skill-upgrade-cycle.ps1",
+  "powershell -ExecutionPolicy Bypass -File .agents/skills/skill-evolution-review/scripts/test-apply-skill-upgrade-proposal.ps1",
+  "powershell -ExecutionPolicy Bypass -File .agents/skills/skill-evolution-review/scripts/test-generate-execute-evolution.ps1",
+  "powershell -ExecutionPolicy Bypass -File .agents/skills/skill-evolution-review/scripts/test-review-analyze-evolution.ps1",
   "powershell -ExecutionPolicy Bypass -File .agents/skills/naming-rule-validate/scripts/test-naming-rule-validate.ps1"
 ]
 

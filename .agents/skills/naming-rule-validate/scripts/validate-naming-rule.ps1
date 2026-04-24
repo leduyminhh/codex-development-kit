@@ -80,6 +80,7 @@ function Test-CapabilityName {
         'flaky', 'flow', 'form', 'gantt', 'grammar', 'handoff', 'ie', 'infrastructure',
         'json', 'maintenance', 'merge', 'mindmap', 'module', 'network', 'object', 'output', 'path',
         'performance', 'qa', 'regression', 'release', 'risk', 'rule', 'safety', 'salt', 'shared',
+        'evolution',
         'sequence', 'spring', 'state', 'strategy', 'structure', 'timing', 'transaction',
         'unit', 'usecase', 'verification', 'wbs', 'wireframe', 'yaml'
     ) | Select-Object -Unique)

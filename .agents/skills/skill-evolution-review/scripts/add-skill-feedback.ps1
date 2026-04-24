@@ -1,10 +1,17 @@
-﻿param(
+param(
     [string]$Root = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..\..')).Path,
     [Parameter(Mandatory = $true)]
     [string]$AgentName,
     [string[]]$SkillNames = @(),
+    [ValidateSet('skill', 'agent')]
+    [string]$TargetType = 'skill',
+    [string]$TargetName = '',
     [ValidateSet('correct', 'wrong', 'mixed')]
     [string]$Outcome = 'mixed',
+    [ValidateSet('low', 'medium', 'high')]
+    [string]$Severity = 'medium',
+    [switch]$Reproducible,
+    [string]$EvidenceKey = '',
     [Parameter(Mandatory = $true)]
     [string]$TaskSummary,
     [string]$CorrectNotes = '',
@@ -42,12 +49,18 @@ New-Item -ItemType Directory -Path $feedbackRoot -Force | Out-Null
 $timeZone = Get-CodexHoChiMinhTimeZone
 $now = [TimeZoneInfo]::ConvertTime([DateTimeOffset]::UtcNow, $timeZone)
 $feedbackFile = Join-Path $feedbackRoot ($now.ToString('yyyyMMdd', [Globalization.CultureInfo]::InvariantCulture) + '_skill-feedback.jsonl')
+$resolvedTargetName = if ([string]::IsNullOrWhiteSpace($TargetName)) { $AgentName } else { $TargetName }
 
 $entry = [ordered]@{
     timestamp    = $now.ToString('yyyy-MM-ddTHH:mm:sszzz', [Globalization.CultureInfo]::InvariantCulture)
     agentName    = $AgentName
     skillNames   = @($SkillNames | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+    targetType   = $TargetType
+    targetName   = $resolvedTargetName
     outcome      = $Outcome
+    severity     = $Severity
+    reproducible = [bool]$Reproducible
+    evidenceKey  = $EvidenceKey
     taskSummary  = $TaskSummary
     correctNotes = $CorrectNotes
     wrongNotes   = $WrongNotes
@@ -58,8 +71,3 @@ $json = $entry | ConvertTo-Json -Compress -Depth 4
 Add-Content -LiteralPath $feedbackFile -Value $json -Encoding utf8
 
 Write-Output $feedbackFile
-
-
-
-
-
