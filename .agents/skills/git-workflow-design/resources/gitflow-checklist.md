@@ -2,52 +2,26 @@
 
 ## Before Staging
 
-- Inspect `git status --short`.
-- Inspect relevant diffs.
-- Group related changes before staging.
-- Split independent change goals into separate commits when reviewability improves.
-- Identify unrelated changes and leave them unstaged.
-- Confirm whether generated/test artifacts should be excluded.
+- Check `git status --short` and the relevant diff
+- Decide whether the worktree is one commit or several logical commit groups
+- Leave unrelated or accidental changes unstaged
 
 ## Before Commit
 
-- Confirm commit type and scope.
-- Generate or validate branch name from type and scope/module.
-- If current branch is `main`, `master`, `develop`, or `dev`, create/switch to the generated working branch before committing.
-- Confirm the current staged set belongs to one logical commit group.
-- Generate message with `type(scope): short summary` if the user did not provide one.
-- Generate a Vietnamese body that follows the commit body rules in `commit-convention.md`.
-- If encoding looks corrupted, fix UTF-8 handling and regenerate before accepting the message.
-- Run relevant verification when feasible.
-- Do not commit failing work unless the user explicitly asks for a checkpoint commit.
+- Confirm commit type, scope, and working branch
+- Make sure the staged set belongs to one logical change goal
+- Generate the title/body using `commit-convention.md`
+- Run relevant verification when feasible
+- Avoid committing known-failing work unless the user explicitly wants a checkpoint
 
-## Push
+## After Commit
 
-- Push current branch only.
-- Use tracking when pushing a new branch.
-- Report remote and branch.
+- Push only the current branch; use tracking when needed
+- Create a PR after push when the user asks to publish or the workflow naturally reaches PR preparation
+- Include remote, branch, PR link, verification, and any moved-repo note in the final report
 
-## Pull Request
+## Merge, Revert, Release, Hotfix
 
-- After a successful push, create a pull request when the user asks to publish or when the workflow naturally moves to PR preparation.
-- Reuse the pushed branch as the PR source branch.
-- Include the PR link in the final report.
-- If the remote indicates a moved repository URL, report the new URL and use the current canonical PR link.
-
-## Merge
-
-- Inspect source and target branch.
-- Avoid destructive reset or checkout.
-- Resolve conflicts intentionally.
-- Use `merge (<scope>): <short title>` when committing merge resolution.
-
-## Revert
-
-- Identify the exact commit to revert.
-- Prefer `git revert` over history rewriting.
-- Use `revert: revert "<original title>"` format.
-
-## Release And Hotfix
-
-- Release branches should focus on stabilization, versioning, changelog, and final verification.
-- Hotfix branches should be narrow, verified, and merged back into active release/development branches as needed.
+- Merge: inspect source/target carefully, resolve conflicts intentionally, avoid destructive reset or checkout
+- Revert: prefer `git revert`, identify the exact commit, and keep the revert title explicit
+- Release/Hotfix: keep scope narrow, verify carefully, and merge back into the correct active branches

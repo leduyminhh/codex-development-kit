@@ -7,110 +7,51 @@ type(scope): short summary
 
 What changed:
 - ...
-  + ...
-  + ...
+  • ...
+
 - ...
-- ...
+
 Why changed:
 - ...
-  + ...
+
 Important notes / breaking impact:
 - ...
-  + ...
+  • ...
 ```
 
-If the user does not provide a message, generate both title and body from the staged or intended diff. Write the body in Vietnamese with diacritics unless repository instructions say otherwise.
+If the user does not provide a message, generate both title and body from the staged diff and nearby source context. Use Vietnamese with diacritics unless repository instructions say otherwise.
 
-## Types
+## Type And Scope
 
-- `feat`: new feature or functionality.
-- `fix`: bug fix.
-- `docs`: documentation updates or improvements.
-- `style`: formatting or style-only changes without behavior change.
-- `refactor`: code structure/readability changes without behavior change.
-- `perf`: performance improvement.
-- `test`: adding or modifying tests.
-- `chore`: routine maintenance, cleanup, or housekeeping.
-- `build`: build process or dependency changes.
-- `ci`: CI/CD pipeline or automation changes.
-- `revert`: revert a previous commit.
-- `merge`: merge branches or resolve merge conflicts.
+- Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, `build`, `ci`, `revert`, `merge`
+- Scope should be the smallest truthful area, usually feature/module, workflow/tooling area, or docs target such as `readme`, `agents`, `config`
+- Title should be imperative English, concise, and normally under 72 characters
 
-## Scope
+## Body Rules
 
-Choose a concise scope from the affected area:
-
-- feature/module name: `user-auth`, `cart`, `api`, `database`
-- workflow/tooling name: `workflow`, `audit`, `git`, `hooks`, `skills`
-- docs target: `readme`, `agents`, `config`
-
-Prefer the smallest truthful scope. Use one scope only.
-
-## Title
-
-- Use imperative English.
-- Keep it short and specific.
-- Do not end with a period.
-- Use `type(scope): short summary` without a space between `type` and `(`.
-- Keep the title under 72 characters when feasible.
-
-## Body
-
-Write in Vietnamese with diacritics using the sections below. Keep it concise, but make the summary strong enough for medium-to-large commits.
-
-```text
-What changed:
-- ...
-  + ...
-  + ...
-- ...
-- ...
-Why changed:
-- ...
-  + ...
-Important notes / breaking impact:
-- ...
-  + ...
-```
-
-Rules:
-
-- `What changed` is required and must contain at least 3 main bullet rows.
-- `Why changed` is required and must contain at least 1 main bullet row.
-- `Important notes / breaking impact` is optional.
-- Each main bullet may include extra detail lines prefixed with `+`.
-- Use `+` detail lines only when they add useful context, not to restate the parent bullet.
-- Prefer 0-3 detail lines under one main bullet.
-- If `Important notes / breaking impact` appears, each bullet must contain a real notable note, migration concern, compatibility impact, or breaking change.
-- Prefer 1-3 bullets for `Why changed`.
-- Prefer 1-3 bullets for `Important notes / breaking impact` when it is needed.
-- Keep each main bullet under 140 characters when feasible.
-- Keep each `+` detail line short and specific.
-- Use proper Vietnamese diacritics. Do not write body bullets in ASCII-only Vietnamese.
-- Avoid background explanation, implementation narration, and repeated file lists.
-- Focus only on what changed, why it changed, and notable impact.
-- Do not add the `Important notes / breaking impact` section just to say there is no impact.
-- Do not include unrelated files or changes in the body.
+- `What changed` and `Why changed` are required; each should contain 1 to 5 main bullets depending on the real size of the change
+- `Important notes / breaking impact` is optional and should appear only when there is a real migration note, compatibility concern, or breaking effect
+- Each main bullet may include optional detail lines prefixed with `•`
+- Leave one blank line between main bullets, but keep `•` detail lines directly under the parent bullet
+- Prefer 0 to 3 detail lines under a main bullet; if the main bullet is already clear, leave it without detail
+- Derive bullets from the actual diff and nearby source context, not from a generic template
+- Read the change like a developer: explain what was improved, fixed, simplified, or enabled, and describe the main flow before supporting flows
+- Avoid file-by-file narration when the workflow, maintenance, or behavioral intent is visible
+- Do not invent reasons, side effects, or impact that are not supported by the staged change
+- Keep bullets short, natural, and useful for code review and history lookup
 
 ## Commit Splitting
 
-- When the working tree contains multiple independent change groups, split them into separate commits automatically.
-- Group by change goal rather than by file type alone.
-- Keep code, tests, and small supporting docs together if they belong to one logical change.
-- Separate commits when one diff mixes unrelated intents such as:
-  - repo structure refactor
-  - documentation rule updates
-  - bug fixes
-  - test-only changes
-  - configuration-only changes
-- Prefer fewer clean commits over one overloaded commit, but avoid artificial micro-commits with no review value.
+- Split commits automatically when the worktree contains multiple independent change goals
+- Group by change intent rather than file type alone
+- Keep code, tests, and small supporting docs together when they belong to one logical change
+- Avoid both overloaded “everything in one commit” commits and artificial micro-commits with no review value
 
 ## Encoding Safety
 
-- Save and read commit convention files as UTF-8.
-- If the terminal or tool shows mojibake, fix encoding handling first and regenerate the text.
-- Do not silently strip Vietnamese diacritics just to avoid an encoding issue.
-- Only use a non-diacritic fallback if the user explicitly approves that compromise.
+- Save and read commit text as UTF-8
+- If the terminal shows mojibake, fix encoding handling before accepting the final message
+- Do not silently remove Vietnamese diacritics unless the user explicitly approves that compromise
 
 ## Examples
 
@@ -119,10 +60,13 @@ feat(workflow): add linked skill installer
 
 What changed:
 - Thêm installer để tạo link skill từ repo vào thư mục Codex local.
-  + Dùng lại script cài đặt hiện có để giảm trùng logic.
+  • Dùng lại script cài đặt hiện có để giảm trùng logic.
+
 - Cập nhật hướng dẫn sử dụng để phản ánh cách cài đặt mới.
-  + Đồng bộ ví dụ lệnh với đường dẫn runtime skill mới.
+  • Đồng bộ ví dụ lệnh với đường dẫn runtime skill mới.
+
 - Giữ nguyên flow dùng skill mà không cần copy thủ công vào từng project.
+
 Why changed:
 - Cần tái sử dụng skill từ repo nhanh hơn và giảm thao tác cài đặt lặp lại.
 ```
@@ -132,11 +76,15 @@ fix(audit): use Ho Chi Minh date for audit file names
 
 What changed:
 - Đặt tên file audit theo Asia/Ho_Chi_Minh thay vì lệch theo timezone mặc định.
-  + Tránh đổi ngày ngoài ý muốn khi chạy gần nửa đêm UTC.
+  • Tránh đổi ngày ngoài ý muốn khi chạy gần nửa đêm UTC.
+
 - Giữ nguyên timestamp UTC trong nội dung log để không mất tính nhất quán hệ thống.
+
 - Đồng bộ cách sinh tên file giữa script ghi log và phần đọc log liên quan.
+
 Why changed:
 - Cần đồng bộ ngày vận hành audit theo múi giờ Việt Nam để tránh lệch ngày khi đối soát.
+
 Important notes / breaking impact:
 - Các job hoặc script ngoài repo đang parse tên file cũ có thể cần cập nhật lại pattern.
 ```
