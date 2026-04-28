@@ -1,4 +1,4 @@
-﻿# Codex Project Configuration
+# Codex Project Configuration
 
 Thu muc `.codex/` chua cau hinh project-local cho Codex workflow kit: agent entry points, policy, test routing, hooks va MCP placeholders.
 

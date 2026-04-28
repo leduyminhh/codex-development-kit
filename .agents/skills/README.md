@@ -1,4 +1,4 @@
-﻿# Skills Runtime Assets
+# Skills Runtime Assets
 
 Thu muc `.agents/skills/` chua runtime skill assets cua repo. Moi skill la mot don vi co the duoc Codex kich hoat khi user request phu hop.
 
@@ -10,7 +10,7 @@ Thu muc `.agents/skills/` chua runtime skill assets cua repo. Moi skill la mot d
     README.md
     <skill-name>/
         SKILL.md
-        metadata/
+        agents/
             openai.yaml
         resources/
         scripts/
@@ -22,7 +22,7 @@ Thu muc `.agents/skills/` chua runtime skill assets cua repo. Moi skill la mot d
 | Thanh phan | Bat buoc | Vai tro |
 |---|---:|---|
 | `SKILL.md` | Co | Frontmatter `name`, `description` va workflow cot loi. |
-| `metadata/openai.yaml` | Khuyen nghi | Metadata hien thi skill trong UI khi skill co prompt goi nhanh hoac integration metadata. |
+| `agents/openai.yaml` | Khuyen nghi | Metadata hien thi skill trong UI khi skill co prompt goi nhanh hoac integration metadata. |
 | `resources/` | Tuy skill | Tai lieu chi tiet chi doc khi task can. |
 | `scripts/` | Tuy skill | Script deterministic gan voi skill. |
 | `subagents/` | Bat buoc cho skill runtime moi | Prompt vai tro chuyen biet duoc skill lua chon khi can. |
@@ -92,7 +92,7 @@ Khi tao skill moi trong `.agents/skills/<skill-name>/`:
 2. Tao `subagents/` va it nhat mot prompt `.md` neu skill co workflow runtime.
 3. Tao hoac cap nhat `.codex/agents/<skill-name>.toml` neu skill can agent entry point.
 4. Tao hoac cap nhat `.codex/agent-metadata/<skill-name>.toml` de giu read_only, hook gate, va governance metadata.
-5. Cap nhat `.agents/skills/manifest.toml` voi `skill_path`, `ui_metadata` va `agent_entry`.
+5. Cap nhat `.agents/skills/manifest.toml` voi `skill_path`, `ui_metadata`, va `agent_entry`.
 6. Chay validator voi `-Fix` de sync `agent_registry` vao `.codex/config.toml`.
 7. Neu co script test, map vao `.codex/test-map.toml`.
 8. Chay validator va selected tests.

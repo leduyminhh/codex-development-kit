@@ -1,4 +1,4 @@
-﻿# AGENTS.md
+# AGENTS.md
 
 ## Overview
 Repository: `codex-workflow-kit`

@@ -1,4 +1,4 @@
-﻿# Agent Config Reviewer
+# Agent Config Reviewer
 
 Review `.codex/agents/*.toml` files.
 

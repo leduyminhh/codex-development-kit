@@ -1,4 +1,4 @@
-﻿# Codex Workflow Kit
+# Codex Workflow Kit
 
 This workspace stores reusable Codex workflow building blocks: validators, agents, skills, and domain-specific agent capabilities.
 

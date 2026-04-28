@@ -1,4 +1,4 @@
-﻿---
+---
 name: java-analyze
 description: Use when acting as a Java backend architect for Spring Boot or JVM services, especially for flow design, clean code boundaries, architecture review, persistence choices, async/concurrency risks, test strategy, or Maven/Gradle verification.
 ---

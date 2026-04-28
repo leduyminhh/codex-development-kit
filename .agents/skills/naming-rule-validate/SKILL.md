@@ -1,4 +1,4 @@
-﻿---
+---
 name: naming-rule-validate
 description: Use when creating or renaming Codex project artifacts such as agents, skills, subagents, workflows, hooks, scripts, or validators in this repository.
 ---
