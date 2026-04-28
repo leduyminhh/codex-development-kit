@@ -1,4 +1,4 @@
-﻿# Project Documentation Output Catalog
+# Project Documentation Output Catalog
 
 Use this catalog when proposing documentation for a project. Every persistent path must start with `docs/` and resolve to `<repo-root>/docs`.
 

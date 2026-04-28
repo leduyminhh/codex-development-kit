@@ -1,4 +1,4 @@
-﻿param([string]$Root = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..\..')).Path)
+param([string]$Root = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..\..')).Path)
 
 $ErrorActionPreference = 'Stop'
 
@@ -18,7 +18,7 @@ function Assert-FileContains {
 $onionRoot = Join-Path $Root '.agents/skills/architecture-onion-design'
 $sharedRoot = Join-Path $Root '.agents/skills/code-shared-design'
 $javaSkill = Join-Path $Root '.agents/skills/java-analyze/SKILL.md'
-$javaMetadata = Join-Path $Root '.agents/skills/java-analyze/metadata/openai.yaml'
+$javaMetadata = Join-Path $Root '.agents/skills/java-analyze/agents/openai.yaml'
 $javaAgent = Join-Path $Root '.codex/agents/java-analyze.toml'
 
 Assert-FileContains -Path (Join-Path $onionRoot 'SKILL.md') -Pattern 'name:\s*architecture-onion-design' 'Onion skill must have valid frontmatter.'
@@ -59,6 +59,7 @@ Assert-FileContains -Path (Join-Path $sharedRoot 'resources/module-boundary-rule
 
 Assert-FileContains -Path $javaSkill -Pattern 'architecture-onion-design' 'oava architect skill must support forcing architecture-onion-design.'
 Assert-FileContains -Path $javaSkill -Pattern 'code-shared-design' 'oava architect skill must support shared module architecture.'
+Assert-True (-not ([System.IO.File]::ReadAllBytes($javaSkill)[0..2] -join ',' -eq '239,187,191')) 'Java skill SKILL.md must not start with UTF-8 BOM.'
 Assert-FileContains -Path $javaMetadata -Pattern 'display_name:\s*"Java Analyze"' 'Java skill UI metadata should display Java Analyze.'
 Assert-FileContains -Path $javaAgent -Pattern 'architecture-onion-design' 'oava architect agent must route explicit onion requests to architecture-onion-design.'
 Assert-FileContains -Path $javaAgent -Pattern 'code-shared-design' 'oava architect agent must route shared module requests.'

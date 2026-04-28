@@ -1,4 +1,4 @@
-﻿# Scripts
+# Scripts
 
 Thu muc `scripts/` chi chua cac script dung chung cho workflow Codex trong repo. Script o day nen deterministic, co pham vi ro rang, va uu tien entry runtime bang Python trong khi test harness van co the dung PowerShell tren Windows.
 

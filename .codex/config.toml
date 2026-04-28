@@ -1,4 +1,4 @@
-﻿# environment Global runtime access
+# environment Global runtime access
 [environment]
 network_access = true
 

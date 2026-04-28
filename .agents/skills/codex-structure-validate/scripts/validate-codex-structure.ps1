@@ -1,4 +1,4 @@
-﻿param(
+param(
     [string]$Root = (Get-Location).Path,
     [switch]$Fix,
     [switch]$IncludeProtectedPaths
@@ -10,6 +10,13 @@ $ErrorActionPreference = 'Stop'
 function New-Finding {
     param([string]$Severity, [string]$Message)
     [pscustomobject]@{ Severity = $Severity; Message = $Message }
+}
+
+function Test-HasUtf8Bom {
+    param([string]$Path)
+
+    $bytes = [System.IO.File]::ReadAllBytes($Path)
+    return $bytes.Length -ge 3 -and $bytes[0] -eq 0xEF -and $bytes[1] -eq 0xBB -and $bytes[2] -eq 0xBF
 }
 
 function Test-AgentReadOnly {
@@ -248,12 +255,25 @@ if (Test-Path -LiteralPath $skillsRoot) {
     $skillFiles = Get-ChildItem -LiteralPath $skillsRoot -Filter 'SKILL.md' -Recurse
     foreach ($file in $skillFiles) {
         $content = Get-Content -LiteralPath $file.FullName -Raw
+        if (Test-HasUtf8Bom -Path $file.FullName) {
+            $findings.Add((New-Finding 'fail' "Skill file must not start with UTF-8 BOM: $($file.FullName)"))
+        }
         $nameMatch = [regex]::Match($content, '(?m)^name:\s*(.+?)\s*$')
         if ($content -match '(?s)^---\s+.*?\s+---' -and $nameMatch.Success -and $content -match '(?m)^description:\s*\S+') {
             [void]$skillNames.Add($nameMatch.Groups[1].Value.Trim().Trim('"'))
             $findings.Add((New-Finding 'pass' "Skill frontmatter looks valid: $($file.FullName)"))
         } else {
             $findings.Add((New-Finding 'fail' "Skill frontmatter must include name and description: $($file.FullName)"))
+        }
+
+        $agentsDir = Join-Path $file.Directory.FullName 'agents'
+        $metadataDir = Join-Path $file.Directory.FullName 'metadata'
+        $agentsOpenAiYaml = Join-Path $agentsDir 'openai.yaml'
+        $metadataOpenAiYaml = Join-Path $metadataDir 'openai.yaml'
+        if (Test-Path -LiteralPath $metadataOpenAiYaml) {
+            $findings.Add((New-Finding 'fail' "Skill UI metadata must live at agents/openai.yaml, not metadata/openai.yaml: $metadataOpenAiYaml"))
+        } elseif (Test-Path -LiteralPath $agentsOpenAiYaml) {
+            $findings.Add((New-Finding 'pass' "Skill UI metadata path looks valid: $agentsOpenAiYaml"))
         }
 
         $subagentsPath = Join-Path $file.Directory.FullName 'subagents'

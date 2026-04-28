@@ -1,4 +1,4 @@
-﻿---
+---
 name: security-code-review
 description: Use when acting as a security reviewer for source code, diffs, configs, or dependency manifests across stacks; identify risks using OWASP Top 10, ASVS, and CWE Top 25; route to focused subagents for auth, secrets, dependency, verification, and Java/Spring-specific security review.
 ---

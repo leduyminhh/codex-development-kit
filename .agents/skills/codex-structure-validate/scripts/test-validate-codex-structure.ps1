@@ -1,4 +1,4 @@
-﻿param([string]$Root = (Resolve-Path (Join-Path $PSScriptRoot '../../../../')).Path)
+param([string]$Root = (Resolve-Path (Join-Path $PSScriptRoot '../../../../')).Path)
 
 $ErrorActionPreference = 'Stop'
 
@@ -38,23 +38,31 @@ enabled = true
 hooks_project_enabled = false
 '@
 
-    Set-Content -LiteralPath (Join-Path $tempRoot '.agents/skills/new-agent/SKILL.md') -Encoding utf8 -Value @'
+    [System.IO.File]::WriteAllText(
+        (Join-Path $tempRoot '.agents/skills/new-agent/SKILL.md'),
+@'
 ---
 name: new-agent
 description: New agent test skill.
 ---
 
 # New Agent
-'@
+'@,
+        [System.Text.UTF8Encoding]::new($false)
+    )
 
-    Set-Content -LiteralPath (Join-Path $tempRoot '.agents/skills/read-only-agent/SKILL.md') -Encoding utf8 -Value @'
+    [System.IO.File]::WriteAllText(
+        (Join-Path $tempRoot '.agents/skills/read-only-agent/SKILL.md'),
+@'
 ---
 name: read-only-agent
 description: Read-only agent test skill.
 ---
 
 # Read Only Agent
-'@
+'@,
+        [System.Text.UTF8Encoding]::new($false)
+    )
 
     Set-Content -LiteralPath (Join-Path $tempRoot 'workflows/workflow-skill-evolution-review/WORKFLOW.md') -Encoding utf8 -Value @'
 ---
@@ -127,6 +135,48 @@ hooks_project_enabled = true
     $generatedMetadata = Get-Content -LiteralPath (Join-Path $tempRoot '.codex/agent-metadata/read-only-agent.toml') -Raw
     Assert-True ($generatedMetadata.Contains('name = "read-only-agent"')) 'Generated metadata should declare the agent name.'
     Assert-True ($generatedMetadata.Contains('read_only = true')) 'Generated metadata should persist read-only state.'
+
+    New-Item -ItemType Directory -Path (Join-Path $tempRoot '.agents/skills/legacy-metadata-agent/metadata') -Force | Out-Null
+    New-Item -ItemType Directory -Path (Join-Path $tempRoot '.agents/skills/bom-agent') -Force | Out-Null
+
+    [System.IO.File]::WriteAllText(
+        (Join-Path $tempRoot '.agents/skills/legacy-metadata-agent/SKILL.md'),
+@'
+---
+name: legacy-metadata-agent
+description: Legacy metadata path test skill.
+---
+
+# Legacy Metadata Agent
+'@,
+        [System.Text.UTF8Encoding]::new($false)
+    )
+
+    [System.IO.File]::WriteAllText(
+        (Join-Path $tempRoot '.agents/skills/legacy-metadata-agent/metadata/openai.yaml'),
+@'
+interface:
+  display_name: "Legacy Metadata Agent"
+  short_description: "Legacy metadata path test"
+  default_prompt: "Use $legacy-metadata-agent to verify metadata path validation."
+'@,
+        [System.Text.UTF8Encoding]::new($false)
+    )
+
+    Set-Content -LiteralPath (Join-Path $tempRoot '.agents/skills/bom-agent/SKILL.md') -Encoding utf8 -Value @'
+---
+name: bom-agent
+description: BOM test skill.
+---
+
+# BOM Agent
+'@
+
+    $legacyMetadataOutput = & powershell -NoProfile -ExecutionPolicy Bypass -File $validator -Root $tempRoot
+    Assert-True ($LASTEXITCODE -eq 1) 'Validator should fail when a skill still uses metadata/openai.yaml or a BOM-prefixed SKILL.md.'
+    $legacyMetadataText = $legacyMetadataOutput -join "`n"
+    Assert-True ($legacyMetadataText.Contains('metadata/openai.yaml')) 'Validator should report legacy metadata/openai.yaml usage.'
+    Assert-True ($legacyMetadataText.Contains('UTF-8 BOM')) 'Validator should report UTF-8 BOM-prefixed skill files.'
 
     New-Item -ItemType Directory -Path $emptyRoot -Force | Out-Null
     & powershell -NoProfile -ExecutionPolicy Bypass -File $validator -Root $emptyRoot -Fix | Out-Null
