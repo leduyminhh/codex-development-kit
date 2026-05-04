@@ -11,6 +11,28 @@ sys.path.insert(0, str(REPO_ROOT / "scripts" / "lib"))
 from codex_config import CodexConfig, now_ho_chi_minh
 
 
+def write_state(root: Path, state_path: str, reason: str, agent_name: str, target_name: str, feedback_file: Path, skill_names: list[str], outcome: str, severity: str) -> None:
+    state_root = root / (state_path or "audit/skill-upgrade-state")
+    state_root.mkdir(parents=True, exist_ok=True)
+    now = now_ho_chi_minh()
+    log_file = state_root / f"{now.strftime('%Y%m%d')}_skill-upgrade-state.jsonl"
+    record = {
+        "schema": "codex.skill-upgrade.state.v1",
+        "timestamp": now.isoformat(timespec="seconds"),
+        "phase": "capture",
+        "status": "completed",
+        "reason": reason,
+        "agentName": agent_name,
+        "targetAgent": target_name,
+        "feedbackFile": str(feedback_file),
+        "skillNames": skill_names,
+        "outcome": outcome,
+        "severity": severity,
+    }
+    with log_file.open("a", encoding="utf-8", newline="\n") as fh:
+        fh.write(json.dumps(record, ensure_ascii=False, separators=(",", ":")) + "\n")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", default=str(REPO_ROOT))
@@ -34,6 +56,7 @@ def main() -> int:
     root = Path(args.root).resolve()
     config = CodexConfig.load(root)
     feedback_path = config.get_str("skill_upgrade", "feedbackPath", default="audit/skill-feedback") or "audit/skill-feedback"
+    state_path = config.get_str("skill_upgrade", "statePath", default="audit/skill-upgrade-state") or "audit/skill-upgrade-state"
     feedback_root = root / feedback_path
     feedback_root.mkdir(parents=True, exist_ok=True)
 
@@ -57,6 +80,17 @@ def main() -> int:
     }
     with feedback_file.open("a", encoding="utf-8", newline="\n") as fh:
         fh.write(json.dumps(entry, ensure_ascii=False, separators=(",", ":")) + "\n")
+    write_state(
+        root,
+        state_path,
+        "feedback_added",
+        args.agent_name,
+        target_name,
+        feedback_file,
+        entry["skillNames"],
+        args.outcome,
+        args.severity,
+    )
 
     print(feedback_file)
     return 0
