@@ -131,7 +131,7 @@ Current approved agents:
 - `java-analyze`
 - `react-code-generate`
 - `security-code-review`
-- `skill-evolution-review`
+- `test-qa-review`
 - `test-automation-validate`
 - `test-qa-review`
 
@@ -143,9 +143,9 @@ Current skill-only capabilities:
 
 Scripts and hooks may use command-style verbs when they are operational wrappers, for example:
 
-- `.agents/skills/skill-evolution-review/scripts/add-skill-feedback.ps1`
-- `.agents/skills/skill-evolution-review/scripts/add-skill-feedback.py`
-- `.agents/skills/skill-evolution-review/scripts/apply-skill-upgrade-proposal.py`
+- `.agents/skills/diagram-generate/scripts/validate-diagram-layout.ps1`
+- `.agents/skills/diagram-generate/scripts/run-diagram-export.py`
+- `.agents/skills/test-automation-validate/scripts/test-automation-validate-strategy.ps1`
 - `.codex/hooks/log-agent-event.ps1`
 - `scripts/hook-service.ps1`
 - `run-coverage-report.ps1`

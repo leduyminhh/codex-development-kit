@@ -67,17 +67,6 @@ defaultTimezone = "Asia/Saigon"
 agentHook = ".codex/hooks/log-agent-event.ps1"
 reloadOnConfigChange = true
 
-# ------------ Skill Upgrade Self-maintenance ------------
-[skill_upgrade]
-enabled = true
-intervalDays = 14
-reviewerAgent = "skill-evolution-review"
-feedbackPath = "audit/skill-feedback"
-proposalPath = "audit/skill-upgrade"
-statePath = "audit/skill-upgrade-state"
-autoApply = false
-requireApproval = true
-
 # ------------ Guards Safety enforcement ------------
 [guards]
 block_danger_full_access = false
@@ -148,13 +137,6 @@ hooks_project_enabled = true
 # agent_registry.security-code-review Security review agent
 [agent_registry.security-code-review]
 path = ".codex/agents/security-code-review.toml"
-read_only = false
-enabled = true
-hooks_project_enabled = true
-
-# agent_registry.skill-evolution-review Skill evolution review agent
-[agent_registry.skill-evolution-review]
-path = ".codex/agents/skill-evolution-review.toml"
 read_only = false
 enabled = true
 hooks_project_enabled = true
