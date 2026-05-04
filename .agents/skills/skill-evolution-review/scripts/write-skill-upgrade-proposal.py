@@ -9,6 +9,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
+sys.path.insert(0, str(REPO_ROOT / "scripts" / "lib"))
+
+from codex_config import CodexConfig, now_ho_chi_minh
 
 PATCH_BUILDERS: dict[tuple[str, str], list[dict[str, str]]] = {
     ("java-analyze", "missing-async-transaction-checklist"): [
@@ -197,6 +200,27 @@ def build_skill_patch(root: Path, proposal_target: str, evidence_key: str) -> li
     return updates
 
 
+def write_state(root: Path, state_path: str, target_name: str, proposal_file: Path, feedback_count: int, recommendation: str, approval_status: str) -> None:
+    state_root = root / (state_path or "audit/skill-upgrade-state")
+    state_root.mkdir(parents=True, exist_ok=True)
+    now = now_ho_chi_minh()
+    log_file = state_root / f"{now.strftime('%Y%m%d')}_skill-upgrade-state.jsonl"
+    record = {
+        "schema": "codex.skill-upgrade.state.v1",
+        "timestamp": now.isoformat(timespec="seconds"),
+        "phase": "propose",
+        "status": "completed",
+        "reason": "proposal_generated",
+        "targetAgent": target_name,
+        "proposalFile": str(proposal_file),
+        "feedbackCount": feedback_count,
+        "recommendation": recommendation,
+        "approvalStatus": approval_status,
+    }
+    with log_file.open("a", encoding="utf-8", newline="\n") as fh:
+        fh.write(json.dumps(record, ensure_ascii=False, separators=(",", ":")) + "\n")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--snapshot-file", required=True)
@@ -206,6 +230,8 @@ def main() -> int:
     args = parser.parse_args()
 
     root = Path(args.root).resolve()
+    config = CodexConfig.load(root)
+    state_path = config.get_str("skill_upgrade", "statePath", default="audit/skill-upgrade-state") or "audit/skill-upgrade-state"
     snapshot = json.loads(Path(args.snapshot_file).read_text(encoding="utf-8-sig"))
     feedback_entries = list(snapshot.get("feedbackEntries", []))
     target_name = str(snapshot.get("targetName") or snapshot.get("targetAgent") or "").strip()
@@ -286,6 +312,7 @@ def main() -> int:
 
     proposal_path = Path(args.proposal_file)
     proposal_path.write_text(json.dumps(proposal, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    write_state(root, state_path, target_name, proposal_path, len(feedback_entries), recommendation, str(proposal["approvalStatus"]))
     print(proposal_path)
     return 0
 

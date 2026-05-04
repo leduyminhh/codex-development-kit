@@ -64,6 +64,10 @@ feedbackPath = "audit/skill-feedback"
     Assert-Equal 'Missed transaction warning' $entry.wrongNotes 'Feedback entry should keep wrong notes.'
     Assert-Equal 'Need checklist for async retry' $entry.missingNotes 'Feedback entry should keep missing notes.'
     Assert-True (-not [string]::IsNullOrWhiteSpace($entry.timestamp)) 'Feedback entry should have timestamp.'
+    $stateFiles = @(Get-ChildItem -LiteralPath (Join-Path $tempRoot 'audit/skill-upgrade-state') -Filter '*.jsonl' -File -ErrorAction SilentlyContinue)
+    Assert-Equal 1 $stateFiles.Count 'add-skill-feedback should create one skill evolution state log file.'
+    $stateRows = @(Get-Content -LiteralPath $stateFiles[0].FullName | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | ForEach-Object { $_ | ConvertFrom-Json })
+    Assert-Equal 1 (@($stateRows | Where-Object { $_.phase -eq 'capture' -and $_.status -eq 'completed' -and $_.reason -eq 'feedback_added' })).Count 'add-skill-feedback should log one feedback_added state row.'
 
     & python $scriptPath `
         --root $tempRoot `
@@ -77,6 +81,8 @@ feedbackPath = "audit/skill-feedback"
 
     Assert-Equal 0 $LASTEXITCODE 'add-skill-feedback should append successfully.'
     Assert-Equal 2 @(Get-Content -LiteralPath $feedbackFiles[0].FullName).Count 'add-skill-feedback should append one oSON line per call.'
+    $stateRows = @(Get-Content -LiteralPath $stateFiles[0].FullName | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | ForEach-Object { $_ | ConvertFrom-Json })
+    Assert-Equal 2 (@($stateRows | Where-Object { $_.phase -eq 'capture' -and $_.status -eq 'completed' -and $_.reason -eq 'feedback_added' })).Count 'add-skill-feedback should append one feedback_added state row per call.'
 
     $previousErrorActionPreference = $ErrorActionPreference
     try {

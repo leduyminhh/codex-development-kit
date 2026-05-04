@@ -21,6 +21,7 @@ $tempRoot = Join-Path ([System.IO.Path]::GetTempPath()) ("codex-generate-execute
 
 try {
     New-Item -ItemType Directory -Path $tempRoot -Force | Out-Null
+    New-Item -ItemType Directory -Path (Join-Path $tempRoot '.codex') -Force | Out-Null
     New-Item -ItemType Directory -Path (Join-Path $tempRoot '.agents/skills/test-automation-validate/resources') -Force | Out-Null
     New-Item -ItemType Directory -Path (Join-Path $tempRoot '.agents/skills/test-automation-validate/scripts') -Force | Out-Null
     New-Item -ItemType Directory -Path (Join-Path $tempRoot '.agents/skills/diagram-generate/resources') -Force | Out-Null
@@ -146,6 +147,10 @@ max_patch_lines = 40
 max_files_per_patch = 2
 validation_commands = ["powershell -ExecutionPolicy Bypass -File .agents/skills/codex-structure-validate/scripts/validate-codex-structure.ps1 -Root ."]
 '@
+    Set-Content -LiteralPath (Join-Path $tempRoot '.codex/config.toml') -Encoding utf8 -Value @'
+[skill_upgrade]
+statePath = "audit/skill-upgrade-state"
+'@
 
     $cases = @(
         @{ target = 'test-automation-validate'; evidence = 'missing-test-scope-selection-guard'; validation = 'test-automation-validate-strategy.ps1'; expectedCount = 3; paths = @('.agents/skills/test-automation-validate/SKILL.md', '.agents/skills/test-automation-validate/resources/framework-detection.md', '.agents/skills/test-automation-validate/scripts/test-automation-validate-strategy.ps1'); snippets = @('smallest useful level', 'smallest useful automated scope', 'smallest useful test scope selection') },
@@ -214,7 +219,15 @@ validation_commands = ["powershell -ExecutionPolicy Bypass -File .agents/skills/
             Assert-True (($proposal.updates[$i].content | Out-String) -match [regex]::Escape($case.snippets[$i])) "$($case.target) update $i should contain the expected snippet."
         }
         Assert-True (($proposal.validationCommands -join "`n") -match [regex]::Escape($case.validation)) "$($case.target) should attach its policy validation command."
+        $stateFiles = @(Get-ChildItem -LiteralPath (Join-Path $tempRoot 'audit/skill-upgrade-state') -Filter '*.jsonl' -File -ErrorAction SilentlyContinue)
+        Assert-True ($stateFiles.Count -ge 1) 'Writer should create skill evolution state logs.'
     }
+
+    $stateRows = @()
+    foreach ($stateFile in $stateFiles) {
+        $stateRows += @(Get-Content -LiteralPath $stateFile.FullName | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | ForEach-Object { $_ | ConvertFrom-Json })
+    }
+    Assert-Equal $cases.Count (@($stateRows | Where-Object { $_.phase -eq 'propose' -and $_.status -eq 'completed' -and $_.reason -eq 'proposal_generated' })).Count 'Writer should log one proposal_generated row per generated proposal.'
 
     Write-Output 'generate-execute evolution tests passed.'
 } finally {
